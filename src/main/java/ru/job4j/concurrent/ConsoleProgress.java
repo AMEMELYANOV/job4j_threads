@@ -8,13 +8,10 @@ public class ConsoleProgress implements Runnable {
         int count = 0;
         while (!Thread.currentThread().isInterrupted()) {
             try {
-                    if (count % process.length == 0) {
-                        System.out.print("\r load: " + process[0]);
-                    } else if (count % process.length == 1) {
-                        System.out.print("\r load: " + process[1]);
-                    } else {
-                        System.out.print("\r load: " + process[2]);
-                    }
+                if (count == process.length) {
+                    count = 0;
+                }
+                    System.out.print("\r load: " + process[count]);
                     Thread.sleep(500);
                     count++;
                 } catch (InterruptedException e) {
