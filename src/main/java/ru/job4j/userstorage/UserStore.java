@@ -3,41 +3,39 @@ package ru.job4j.userstorage;
 import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @ThreadSafe
 public class UserStore {
     @GuardedBy("this")
-    final private List<User> users = new ArrayList<>();
+    final private Map<Integer, User> users = new HashMap<>();
 
     public synchronized boolean add(User user) {
-        User currentUser = findById(user.getId());
-        if (currentUser != null) {
-            return false;
+        boolean rsl = false;
+        if (!users.containsKey(user.getId())) {
+            users.put(user.getId(), new User(user.getId(), user.getAmount()));
+            rsl = true;
         }
-        return users.add(new User(user.getId(), user.getAmount()));
+        return rsl;
     }
 
     public synchronized boolean update(User user) {
         boolean rsl = false;
-        for (User currentUser : users) {
-            if (currentUser.getId() == user.getId()) {
-                currentUser.setAmount(user.getAmount());
-                rsl = true;
-                break;
-           }
+        if (users.containsKey(user.getId())) {
+            users.replace(user.getId(), new User(user.getId(), user.getAmount()));
+            rsl = true;
         }
         return rsl;
     }
 
     public synchronized boolean delete(User user) {
-        return users.remove(user);
+        return users.remove(user.getId(), user);
     }
 
     public synchronized void transfer(int fromId, int toId, int amount) {
-            User src = findById(fromId);
-            User dst = findById(toId);
+            User src = users.get(fromId);
+            User dst = users.get(toId);
             if (src == null) {
                 System.out.println("Source of transfer not found");
             } else if (dst == null) {
@@ -48,17 +46,6 @@ public class UserStore {
                 src.setAmount(src.getAmount() - amount);
                 dst.setAmount(dst.getAmount() + amount);
             }
-    }
-
-    private synchronized User findById(int id) {
-        User rsl = null;
-        for (User current : users) {
-            if (current.getId() == id) {
-                rsl = current;
-                break;
-            }
-        }
-        return rsl;
     }
 
     @Override
@@ -73,20 +60,21 @@ public class UserStore {
 class Test {
     public static void main(String[] args) {
         UserStore storage = new UserStore();
-
         storage.add(new User(1, 100));
         storage.add(new User(2, 200));
 
         storage.update(new User(1, 200));
         storage.update(new User(2, 400));
+        System.out.println(storage);
 
         storage.transfer(1, 2, 100);
-
         System.out.println(storage);
+        storage.transfer(1, 2, 500);
+        storage.transfer(3, 2, 100);
+        storage.transfer(2, 3, 100);
 
         storage.delete(new User(1, 100));
         storage.delete(new User(2, 500));
         System.out.println(storage);
-
     }
 }
