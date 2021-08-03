@@ -1,0 +1,69 @@
+package ru.job4j;
+
+import org.junit.Test;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+
+public class SimpleBlockingQueueTest {
+    SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>(5);
+
+    @Test
+    public void whenFinallyQueueSize0() throws InterruptedException {
+        Thread producer = new Thread(() -> {
+            System.out.println(Thread.currentThread().getName() + " started");
+            for (int i = 0; i < 5; i++) {
+                try {
+                    queue.offer(i);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, "Producer");
+        Thread consumer = new Thread(() -> {
+            System.out.println(Thread.currentThread().getName() + " started");
+            for (int i = 0; i < 5; i++) {
+                try {
+                    queue.poll();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, "Consumer");
+        producer.start();
+        consumer.start();
+        producer.join();
+        consumer.join();
+        int expectedQueueSize = 0;
+        assertThat(expectedQueueSize, is(queue.size()));
+    }
+
+    @Test
+    public void whenFinallyQueueSizeNot0() throws InterruptedException {
+        Thread producer = new Thread(() -> {
+            System.out.println(Thread.currentThread().getName() + " started");
+            for (int i = 0; i < 10; i++) {
+                try {
+                    queue.offer(i);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, "Producer");
+        Thread consumer = new Thread(() -> {
+            System.out.println(Thread.currentThread().getName() + " started");
+            for (int i = 0; i < 5; i++) {
+                try {
+                    queue.poll();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, "Consumer");
+        producer.start();
+        consumer.start();
+        producer.join();
+        consumer.join();
+        int expectedQueueSize = 5;
+        assertThat(expectedQueueSize, is(queue.size()));
+    }
+}
