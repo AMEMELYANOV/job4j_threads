@@ -17,20 +17,28 @@ public class SimpleBlockingQueue<T> {
         this.limit = limit;
     }
 
-    public void offer(T value) throws InterruptedException {
+    public void offer(T value) {
         synchronized (monitor) {
             while (queue.size() == limit) {
-                monitor.wait();
+                try {
+                    monitor.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
             queue.offer(value);
             monitor.notifyAll();
         }
     }
 
-    public T poll() throws InterruptedException {
+    public T poll() {
         synchronized (monitor) {
             while (queue.size() == 0) {
-                monitor.wait();
+                try {
+                    monitor.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
             T value = queue.poll();
             monitor.notifyAll();
@@ -40,5 +48,14 @@ public class SimpleBlockingQueue<T> {
 
     public int size() {
         return queue.size();
+    }
+
+    public boolean isEmpty() {
+        return size() == 0;
+    }
+
+    public static void main(String[] args) {
+        SimpleBlockingQueue queue = new SimpleBlockingQueue(5);
+        System.out.println(queue.isEmpty());
     }
 }
