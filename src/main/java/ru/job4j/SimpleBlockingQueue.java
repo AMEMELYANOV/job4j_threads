@@ -23,8 +23,6 @@ public class SimpleBlockingQueue<T> {
                 monitor.wait();
             }
             queue.offer(value);
-            System.out.println("Добавление в очередь элемента - " + value);
-            System.out.println("Текущий размер очереди - " + queue.size());
             monitor.notifyAll();
         }
     }
@@ -35,8 +33,6 @@ public class SimpleBlockingQueue<T> {
                 monitor.wait();
             }
             T value = queue.poll();
-            System.out.println("Чтение из очереди элемента - " + value);
-            System.out.println("Текущий размер очереди - " + queue.size());
             monitor.notifyAll();
             return value;
         }
