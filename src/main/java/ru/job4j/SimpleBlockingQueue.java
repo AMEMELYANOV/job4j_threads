@@ -53,9 +53,4 @@ public class SimpleBlockingQueue<T> {
     public boolean isEmpty() {
         return size() == 0;
     }
-
-    public static void main(String[] args) {
-        SimpleBlockingQueue queue = new SimpleBlockingQueue(5);
-        System.out.println(queue.isEmpty());
-    }
 }
