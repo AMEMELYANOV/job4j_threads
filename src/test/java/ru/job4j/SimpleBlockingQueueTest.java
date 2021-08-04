@@ -10,8 +10,7 @@ public class SimpleBlockingQueueTest {
     @Test
     public void whenFinallyQueueSize0() throws InterruptedException {
         Thread producer = new Thread(() -> {
-            System.out.println(Thread.currentThread().getName() + " started");
-            for (int i = 0; i < 5; i++) {
+             for (int i = 0; i < 5; i++) {
                 try {
                     queue.offer(i);
                 } catch (InterruptedException e) {
@@ -20,7 +19,6 @@ public class SimpleBlockingQueueTest {
             }
         }, "Producer");
         Thread consumer = new Thread(() -> {
-            System.out.println(Thread.currentThread().getName() + " started");
             for (int i = 0; i < 5; i++) {
                 try {
                     queue.poll();
@@ -40,8 +38,7 @@ public class SimpleBlockingQueueTest {
     @Test
     public void whenFinallyQueueSizeNot0() throws InterruptedException {
         Thread producer = new Thread(() -> {
-            System.out.println(Thread.currentThread().getName() + " started");
-            for (int i = 0; i < 10; i++) {
+             for (int i = 0; i < 10; i++) {
                 try {
                     queue.offer(i);
                 } catch (InterruptedException e) {
@@ -50,8 +47,7 @@ public class SimpleBlockingQueueTest {
             }
         }, "Producer");
         Thread consumer = new Thread(() -> {
-            System.out.println(Thread.currentThread().getName() + " started");
-            for (int i = 0; i < 5; i++) {
+             for (int i = 0; i < 5; i++) {
                 try {
                     queue.poll();
                 } catch (InterruptedException e) {
