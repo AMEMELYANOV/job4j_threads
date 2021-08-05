@@ -17,15 +17,10 @@ public class SimpleBlockingQueue<T> {
         this.limit = limit;
     }
 
-    public void offer(T value) {
+    public void offer(T value) throws InterruptedException {
         synchronized (monitor) {
             while (queue.size() == limit) {
-                try {
                     monitor.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
             }
             queue.offer(value);
             monitor.notifyAll();
