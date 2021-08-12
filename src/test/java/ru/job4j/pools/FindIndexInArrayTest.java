@@ -21,7 +21,8 @@ public class FindIndexInArrayTest {
     public void whenObjectInFirstHalfAndInteger() {
         Integer[] array = getInitArray(100);
         int searchObject = 15;
-        FindIndexInArray<Integer> findIndexInArray = new FindIndexInArray<>(array, searchObject);
+        FindIndexInArray<Integer> findIndexInArray = new FindIndexInArray<>(
+                array, searchObject, 0, array.length - 1);
         ForkJoinPool pool = new ForkJoinPool(Runtime.getRuntime().availableProcessors());
         int expected = 15;
         assertThat(expected, is(pool.invoke(findIndexInArray)));
@@ -31,7 +32,8 @@ public class FindIndexInArrayTest {
     public void whenObjectInSecondHalfAndInteger() {
         Integer[] array = getInitArray(100);
         int searchObject = 95;
-        FindIndexInArray<Integer> findIndexInArray = new FindIndexInArray<>(array, searchObject);
+        FindIndexInArray<Integer> findIndexInArray = new FindIndexInArray<>(
+                array, searchObject, 0, array.length - 1);
         ForkJoinPool pool = new ForkJoinPool(Runtime.getRuntime().availableProcessors());
         int expected = 95;
         assertThat(expected, is(pool.invoke(findIndexInArray)));
@@ -40,7 +42,8 @@ public class FindIndexInArrayTest {
     @Test
     public void whenObjectInFirstHalfAndString() {
         String searchObject = "c";
-        FindIndexInArray<String> findIndexInArray = new FindIndexInArray<>(stringArray, searchObject);
+        FindIndexInArray<String> findIndexInArray = new FindIndexInArray<>(
+                stringArray, searchObject, 0, stringArray.length - 1);
         ForkJoinPool pool = new ForkJoinPool(Runtime.getRuntime().availableProcessors());
         int expected = 2;
         assertThat(expected, is(pool.invoke(findIndexInArray)));
@@ -49,7 +52,8 @@ public class FindIndexInArrayTest {
     @Test
     public void whenObjectInSecondHalfAndString() {
         String searchObject = "k";
-        FindIndexInArray<String> findIndexInArray = new FindIndexInArray<>(stringArray, searchObject);
+        FindIndexInArray<String> findIndexInArray = new FindIndexInArray<>(
+                stringArray, searchObject, 0, stringArray.length - 1);
         ForkJoinPool pool = new ForkJoinPool(Runtime.getRuntime().availableProcessors());
         int expected = 10;
         assertThat(expected, is(pool.invoke(findIndexInArray)));
@@ -58,7 +62,8 @@ public class FindIndexInArrayTest {
     @Test
     public void whenObjectNotFound() {
         String searchObject = "z";
-        FindIndexInArray<String> findIndexInArray = new FindIndexInArray<>(stringArray, searchObject);
+        FindIndexInArray<String> findIndexInArray = new FindIndexInArray<>(
+                stringArray, searchObject, 0, stringArray.length - 1);
         ForkJoinPool pool = new ForkJoinPool(Runtime.getRuntime().availableProcessors());
         int expected = -1;
         assertThat(expected, is(pool.invoke(findIndexInArray)));
