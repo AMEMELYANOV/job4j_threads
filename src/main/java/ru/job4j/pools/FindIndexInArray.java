@@ -5,7 +5,8 @@ import java.util.concurrent.RecursiveTask;
 public class FindIndexInArray<T>  extends RecursiveTask<Integer> {
     private final T[] array;
     private final T searchObject;
-    int startIndex, endIndex;
+    private final int startIndex;
+    private final int endIndex;
 
     public FindIndexInArray(T[] array, T searchObject, int startIndex, int endIndex) {
         this.array = array;
@@ -22,7 +23,7 @@ public class FindIndexInArray<T>  extends RecursiveTask<Integer> {
             FindIndexInArray<T> second = new FindIndexInArray<>(array, searchObject, middleIndex, endIndex);
             first.fork();
             second.fork();
-            return merge(first.join(), second.join());
+            return Math.max(first.join(), second.join());
         }
         return linearSearch();
     }
@@ -34,15 +35,5 @@ public class FindIndexInArray<T>  extends RecursiveTask<Integer> {
             }
         }
         return -1;
-    }
-
-    private int merge(int first, int second) {
-        if (first == -1 && second == -1) {
-            return -1;
-        } else if (first == -1) {
-            return second;
-        } else {
-            return first;
-        }
     }
 }
