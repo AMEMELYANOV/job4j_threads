@@ -30,18 +30,7 @@ public class RolColSum {
     public static Sums[] sum(int[][] matrix) {
         Sums[] rsl = new Sums[matrix.length];
         for (int i = 0; i < matrix.length; i++) {
-            int rowSum = 0;
-            for (int j = 0; j < matrix[i].length; j++) {
-                rowSum += matrix[i][j];
-            }
-            int colSum = 0;
-            for (int j = 0; j < matrix.length; j++) {
-                colSum += matrix[j][i];
-            }
-            Sums sums = new Sums();
-            sums.setRowSum(rowSum);
-            sums.setColSum(colSum);
-            rsl[i] = sums;
+            rsl[i] = sumByIndex(matrix, i);
         }
         return rsl;
     }
@@ -59,19 +48,19 @@ public class RolColSum {
     }
 
     public static CompletableFuture<Sums> getTask(int[][] matrix, int index) {
-        return CompletableFuture.supplyAsync(() -> {
-            Sums sum = new Sums();
-            int rowSum = 0;
-            for (int i = 0; i < matrix[index].length; i++) {
-                rowSum += matrix[index][i];
-            }
-            int colSum = 0;
-            for (int i = 0; i < matrix.length; i++) {
-                colSum += matrix[i][index];
-            }
-            sum.setRowSum(rowSum);
-            sum.setColSum(colSum);
-            return sum;
-        });
+        return CompletableFuture.supplyAsync(() -> sumByIndex(matrix, index));
+    }
+
+    private static Sums sumByIndex(int[][] matrix, int index) {
+        Sums sum = new Sums();
+        int rowSum = 0;
+        int colSum = 0;
+        for (int i = 0; i < matrix.length; i++) {
+            rowSum += matrix[index][i];
+            colSum += matrix[i][index];
+        }
+        sum.setRowSum(rowSum);
+        sum.setColSum(colSum);
+        return sum;
     }
 }
